@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Post } from 'src/app/_models/post.model';
 
 @Component({
   selector: 'app-post-list',
@@ -6,11 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./post-list.component.scss'],
 })
 export class PostListComponent implements OnInit {
-  posts: Array<any> = [
-    // { title: 'First Post', content: "This is post 1's content" },
-    // { title: 'Second Post', content: "This is post 2's content" },
-    // { title: 'Third Post', content: "This is post 3's content" },
-  ];
+  @Input() posts!: Post[];
 
   constructor() {}
 
