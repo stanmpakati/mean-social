@@ -10,15 +10,13 @@ import { PostService } from '../_services/post.service';
   styleUrls: ['./posts.component.scss'],
 })
 export class PostsComponent implements OnInit, OnDestroy {
-  posts!: Post[];
+  posts: Post[] = [];
   postsSub!: Subscription;
 
   constructor(private postService: PostService) {}
 
   ngOnInit(): void {
-    this.postService.getPosts().subscribe((posts) => {
-      this.posts = posts;
-    });
+    this.postService.getPosts();
 
     this.postsSub = this.postService.getPostsListener().subscribe((posts) => {
       this.posts = posts;

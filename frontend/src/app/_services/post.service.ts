@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
 import { Post } from '../_models/post.model';
@@ -13,10 +14,15 @@ export class PostService {
   ];
   private postsUpdated = new Subject<Post[]>();
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
-  getPosts(): Observable<Post[]> {
-    return of(this.posts);
+  getPosts(): void {
+    this.http
+      .get<Post[]>('http://localhost:5000/api/posts')
+      .subscribe((posts) => {
+        this.posts = posts;
+        this.postsUpdated.next([...this.posts]);
+      });
   }
 
   getPostsListener(): Observable<Post[]> {
