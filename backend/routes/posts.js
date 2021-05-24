@@ -1,32 +1,34 @@
 import express from "express";
+import Post from "../models/post.js";
 
 const router = express.Router();
 
-let posts = [
-  {
-    id: "iijo89s090s",
-    title: "Server side post",
-    content: "This post comes from the backend i.e node js",
-  },
-  {
-    id: "uuir4938",
-    title: "Second Server side post",
-    content: "Hanzi just one post is boring",
-  },
-];
+let posts = [];
 
 router.post("/", (req, res) => {
-  const post = req.body;
+  const post = new Post(req.body);
   posts.push(post);
   console.log(posts);
-  res.status(201).json({
-    message: "201 message idiot, what else do you want from me?",
-    recieved: post,
-  });
+
+  post
+    .save()
+    .then((result) => {
+      res.status(201).json({
+        message: "201 message idiot, what else do you want from me?",
+        recieved: result,
+      });
+      console.log(result);
+    })
+    .catch((err) => console.log(err));
 });
 
 router.get("/", (req, res) => {
-  res.status(200).json(posts);
+  Post.find()
+    .then((documents) => {
+      console.log(documents);
+      res.status(200).json(documents);
+    })
+    .catch((err) => console.log(err));
 });
 
 export default router;
