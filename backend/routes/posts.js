@@ -3,21 +3,17 @@ import Post from "../models/post.js";
 
 const router = express.Router();
 
-let posts = [];
-
 router.post("/", (req, res) => {
   const post = new Post(req.body);
-  posts.push(post);
-  console.log(posts);
 
   post
     .save()
-    .then((result) => {
+    .then((createdPost) => {
       res.status(201).json({
         message: "201 message idiot, what else do you want from me?",
-        recieved: result,
+        postId: createdPost._id,
       });
-      console.log(result);
+      console.log(createdPost);
     })
     .catch((err) => console.log(err));
 });
@@ -32,7 +28,6 @@ router.get("/", (req, res) => {
 
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
-  console.log(id);
 
   Post.deleteOne({ _id: id }).then((result) => {
     console.log(result), res.status(201).json({ message: "deleted" });
