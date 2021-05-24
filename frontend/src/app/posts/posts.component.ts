@@ -30,4 +30,8 @@ export class PostsComponent implements OnInit, OnDestroy {
   onAddPost(post: Post) {
     this.postService.addPost(post);
   }
+
+  deletePost(postId: string) {
+    this.postService.deletePost(postId);
+  }
 }

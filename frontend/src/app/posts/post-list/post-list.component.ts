@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Post } from 'src/app/_models/post.model';
 
 @Component({
@@ -8,8 +8,12 @@ import { Post } from 'src/app/_models/post.model';
 })
 export class PostListComponent implements OnInit {
   @Input() posts!: Post[];
+  @Output() onDeletePost = new EventEmitter<string>();
 
   constructor() {}
 
   ngOnInit(): void {}
+  onDelete(postId: string) {
+    this.onDeletePost.emit(postId);
+  }
 }

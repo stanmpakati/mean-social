@@ -1,2 +1,5 @@
 <app-posts-create (addPost)="onAddPost($event)"></app-posts-create>
-<app-post-list [posts]="posts"></app-post-list>
+<app-post-list
+  [posts]="posts"
+  (onDeletePost)="deletePost($event)"
+></app-post-list>

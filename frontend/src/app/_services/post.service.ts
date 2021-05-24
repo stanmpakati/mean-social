@@ -1,24 +1,30 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Post } from '../_models/post.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PostService {
-  private posts: Post[] = [
-    { title: 'First Post', content: "This is post 1's content" },
-    { title: 'Second Post', content: "This is post 2's content" },
-    { title: 'Third Post', content: "This is post 3's content" },
-  ];
+  private posts: Post[] = [];
   private postsUpdated = new Subject<Post[]>();
 
   constructor(private http: HttpClient) {}
 
   getPosts(): void {
     this.http
-      .get<Post[]>('http://localhost:5000/api/posts')
+      .get<any>('http://localhost:5000/api/posts')
+      .pipe(
+        map((postData) =>
+          postData.map((post: { title: any; content: any; _id: any }) => ({
+            title: post.title,
+            content: post.content,
+            id: post._id,
+          }))
+        )
+      )
       .subscribe((posts) => {
         this.posts = posts;
         this.postsUpdated.next([...this.posts]);
@@ -42,5 +48,11 @@ export class PostService {
         this.posts.push(post);
         this.postsUpdated.next([...this.posts]);
       });
+  }
+
+  deletePost(postId: string) {
+    this.http
+      .delete(`http://localhost:5000/api/posts/${postId}`)
+      .subscribe(() => console.log('deleted'));
   }
 }

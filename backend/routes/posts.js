@@ -25,10 +25,18 @@ router.post("/", (req, res) => {
 router.get("/", (req, res) => {
   Post.find()
     .then((documents) => {
-      console.log(documents);
       res.status(200).json(documents);
     })
     .catch((err) => console.log(err));
+});
+
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+
+  Post.deleteOne({ _id: id }).then((result) => {
+    console.log(result), res.status(201).json({ message: "deleted" });
+  });
 });
 
 export default router;
