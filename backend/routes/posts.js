@@ -26,6 +26,19 @@ router.get("/", (req, res) => {
     .catch((err) => console.log(err));
 });
 
+router.put("/:id", (req, res) => {
+  const post = new Post({
+    _id: req.body.id,
+    title: req.body.title,
+    content: req.body.content,
+  });
+  console.log(post);
+  Post.updateOne({ _id: req.params.id, post }).then((result) => {
+    res.status(201).json({ message: "update successful" });
+    console.log(result);
+  });
+});
+
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
 
