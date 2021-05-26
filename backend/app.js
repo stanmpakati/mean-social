@@ -1,11 +1,12 @@
 import express from "express";
-import bodyParser from "body-parser";
+// import bodyParser from "body-parser";
 
 import postRoutes from "./routes/posts.js";
 
 export const app = express();
 
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");

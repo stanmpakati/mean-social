@@ -13,7 +13,6 @@ router.post("/", (req, res) => {
         message: "201 message idiot, what else do you want from me?",
         postId: createdPost._id,
       });
-      console.log(createdPost);
     })
     .catch((err) => console.log(err));
 });
@@ -26,16 +25,15 @@ router.get("/", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-router.put("/:id", (req, res) => {
+router.patch("/:id", (req, res) => {
   const post = new Post({
     _id: req.body.id,
     title: req.body.title,
     content: req.body.content,
   });
-  console.log(post);
-  Post.updateOne({ _id: req.params.id, post }).then((result) => {
+
+  Post.updateOne({ _id: req.params.id }, post).then((result) => {
     res.status(201).json({ message: "update successful" });
-    console.log(result);
   });
 });
 

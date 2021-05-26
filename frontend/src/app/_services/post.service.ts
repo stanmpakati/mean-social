@@ -40,6 +40,7 @@ export class PostService {
   }
 
   addPost(post: Post) {
+    console.log('adding');
     this.http
       .post<{ message: string; postId: string }>(
         'http://localhost:5000/api/posts',
@@ -47,6 +48,7 @@ export class PostService {
         // {observe: 'response'}
       )
       .subscribe((response) => {
+        console.log(response);
         const postId = response.postId;
         post.id = postId;
         this.posts.push(post);
@@ -55,10 +57,10 @@ export class PostService {
   }
 
   updatePost(post: Post) {
-    console.log(post.id);
+    console.log(` update: ${post}`);
     this.http
-      .put(`http://localhost:5000/api/posts/${post.id}`, post)
-      .subscribe((responce) => console.log(responce));
+      .patch(`http://localhost:5000/api/posts/${post.id}`, post)
+      .subscribe((response) => console.log(response));
   }
 
   deletePost(postId: string) {
