@@ -1,48 +1,23 @@
 import express from "express";
-import Post from "../models/post.js";
+
+import {
+  addPost,
+  getPosts,
+  getPost,
+  updatePost,
+  deletePost,
+} from "./controllers/post.js";
 
 const router = express.Router();
 
-router.post("/", (req, res) => {
-  const post = new Post(req.body);
+router.post("/", addPost);
 
-  post
-    .save()
-    .then((createdPost) => {
-      res.status(201).json({
-        message: "201 message idiot, what else do you want from me?",
-        postId: createdPost._id,
-      });
-    })
-    .catch((err) => console.log(err));
-});
+router.get("/", getPosts);
 
-router.get("/", (req, res) => {
-  Post.find()
-    .then((documents) => {
-      res.status(200).json(documents);
-    })
-    .catch((err) => console.log(err));
-});
+router.get("/:id", getPost);
 
-router.patch("/:id", (req, res) => {
-  const post = new Post({
-    _id: req.body.id,
-    title: req.body.title,
-    content: req.body.content,
-  });
+router.patch("/:id", updatePost);
 
-  Post.updateOne({ _id: req.params.id }, post).then((result) => {
-    res.status(201).json({ message: "update successful" });
-  });
-});
-
-router.delete("/:id", (req, res) => {
-  const { id } = req.params;
-
-  Post.deleteOne({ _id: id }).then((result) => {
-    console.log(result), res.status(201).json({ message: "deleted" });
-  });
-});
+router.delete("/:id", deletePost);
 
 export default router;

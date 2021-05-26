@@ -36,7 +36,7 @@ export class PostService {
   }
 
   getPost(id: string) {
-    return { ...this.posts.find((p) => p.id === id) };
+    return this.http.get<Post>(`http://localhost:5000/api/posts/${id}`);
   }
 
   addPost(post: Post) {
