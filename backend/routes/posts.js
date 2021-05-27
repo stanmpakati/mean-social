@@ -1,4 +1,5 @@
 import express from "express";
+import multer from "multer";
 
 import {
   addPost,
@@ -6,17 +7,18 @@ import {
   getPost,
   updatePost,
   deletePost,
+  storage,
 } from "./controllers/post.js";
 
 const router = express.Router();
-
-router.post("/", addPost);
 
 router.get("/", getPosts);
 
 router.get("/:id", getPost);
 
-router.patch("/:id", updatePost);
+router.post("/", multer({ storage: storage }).single("image"), addPost);
+
+router.patch("/:id", multer({ storage: storage }).single("image"), updatePost);
 
 router.delete("/:id", deletePost);
 

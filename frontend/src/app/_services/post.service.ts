@@ -18,14 +18,18 @@ export class PostService {
       .get<any>('http://localhost:5000/api/posts')
       .pipe(
         map((postData) =>
-          postData.map((post: { title: any; content: any; _id: any }) => ({
-            title: post.title,
-            content: post.content,
-            id: post._id,
-          }))
+          postData.map(
+            (post: { title: any; content: any; _id: any; imagePath: any }) => ({
+              title: post.title,
+              content: post.content,
+              imagePath: post.imagePath,
+              id: post._id,
+            })
+          )
         )
       )
       .subscribe((posts) => {
+        console.log(posts);
         this.posts = posts;
         this.postsUpdated.next([...this.posts]);
       });
@@ -39,27 +43,41 @@ export class PostService {
     return this.http.get<Post>(`http://localhost:5000/api/posts/${id}`);
   }
 
-  addPost(post: Post) {
-    console.log('adding');
+  addPost(post: Post, image: File) {
+    const postData = new FormData();
+    postData.append('id', post.id);
+    postData.append('title', post.title);
+    postData.append('content', post.content);
+    postData.append('image', image, post.title);
+
     this.http
-      .post<{ message: string; postId: string }>(
+      .post<{ message: string; post: Post }>(
         'http://localhost:5000/api/posts',
-        post
+        postData
         // {observe: 'response'}
       )
       .subscribe((response) => {
         console.log(response);
-        const postId = response.postId;
-        post.id = postId;
-        this.posts.push(post);
+        this.posts.push(response.post);
         this.postsUpdated.next([...this.posts]);
       });
   }
 
-  updatePost(post: Post) {
-    console.log(` update: ${post}`);
+  updatePost(post: Post, image: File | string) {
+    let postData: FormData | Post;
+
+    if (typeof image == 'object') {
+      postData = new FormData();
+      postData.append('id', post.id);
+      postData.append('title', post.title);
+      postData.append('content', post.content);
+      postData.append('image', image, post.title);
+    } else {
+      postData = { ...post, imagePath: image };
+    }
+
     this.http
-      .patch(`http://localhost:5000/api/posts/${post.id}`, post)
+      .patch(`http://localhost:5000/api/posts/${post.id}`, postData)
       .subscribe((response) => console.log(response));
   }
 

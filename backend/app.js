@@ -1,5 +1,5 @@
 import express from "express";
-// import bodyParser from "body-parser";
+import path from "path";
 
 import postRoutes from "./routes/posts.js";
 
@@ -7,6 +7,7 @@ export const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use("/images", express.static(path.join("images")));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
