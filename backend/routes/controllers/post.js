@@ -43,7 +43,16 @@ export const addPost = (req, res) => {
 };
 
 export const getPosts = (req, res) => {
-  Post.find()
+  const pageSize = +req.query.pagesize;
+  const currentPage = +req.query.page;
+
+  const postQuery = Post.find();
+
+  if (pageSize && currentPage) {
+    postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
+  }
+
+  postQuery
     .then((documents) => {
       res.status(200).json(documents);
     })

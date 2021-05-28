@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { PageEvent } from '@angular/material/paginator';
 import { Post } from 'src/app/_models/post.model';
 
 @Component({
@@ -9,6 +10,9 @@ import { Post } from 'src/app/_models/post.model';
 export class PostListComponent implements OnInit {
   @Input() posts!: Post[];
   @Output() onDeletePost = new EventEmitter<string>();
+  totalPosts = 10;
+  postsperPage = 3;
+  pageSizeOptions = [1, 2, 5, 10];
 
   constructor() {}
 
@@ -16,4 +20,6 @@ export class PostListComponent implements OnInit {
   onDelete(postId: string) {
     this.onDeletePost.emit(postId);
   }
+
+  onPageChange(pageData: PageEvent) {}
 }

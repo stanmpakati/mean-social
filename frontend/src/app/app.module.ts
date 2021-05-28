@@ -7,6 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,6 +16,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { PostListComponent } from './posts/post-list/post-list.component';
 import { PostsComponent } from './posts/posts.component';
 import { PostsCreateComponent } from './posts/posts-create/posts-create.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +25,7 @@ import { PostsCreateComponent } from './posts/posts-create/posts-create.componen
     HeaderComponent,
     PostListComponent,
     PostsComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
@@ -35,6 +38,7 @@ import { PostsCreateComponent } from './posts/posts-create/posts-create.componen
     MatButtonModule,
     MatToolbarModule,
     MatExpansionModule,
+    MatPaginatorModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
