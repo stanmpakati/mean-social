@@ -16,7 +16,7 @@ export class PostsComponent implements OnInit, OnDestroy {
   constructor(private postService: PostService) {}
 
   ngOnInit(): void {
-    this.postService.getPosts();
+    this.postService.getPosts(5, 1);
 
     this.postsSub = this.postService.getPostsListener().subscribe((posts) => {
       this.posts = posts;
@@ -25,6 +25,10 @@ export class PostsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.postsSub.unsubscribe();
+  }
+
+  pageChange(pageData: { postsPerPage: number; currentPage: number }) {
+    this.postService.getPosts(pageData.postsPerPage, pageData.currentPage);
   }
 
   deletePost(postId: string) {

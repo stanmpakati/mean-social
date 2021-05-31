@@ -10,16 +10,30 @@ import { Post } from 'src/app/_models/post.model';
 export class PostListComponent implements OnInit {
   @Input() posts!: Post[];
   @Output() onDeletePost = new EventEmitter<string>();
+  @Output() onChangePage = new EventEmitter<{
+    postsPerPage: number;
+    currentPage: number;
+  }>();
   totalPosts = 10;
   postsperPage = 3;
+  currentPage = 1;
   pageSizeOptions = [1, 2, 5, 10];
 
   constructor() {}
 
   ngOnInit(): void {}
+
   onDelete(postId: string) {
     this.onDeletePost.emit(postId);
   }
 
-  onPageChange(pageData: PageEvent) {}
+  onPageChange(pageData: PageEvent) {
+    this.currentPage = pageData.pageIndex + 1;
+    this.postsperPage = pageData.pageSize;
+
+    this.onChangePage.emit({
+      postsPerPage: this.postsperPage,
+      currentPage: this.currentPage,
+    });
+  }
 }

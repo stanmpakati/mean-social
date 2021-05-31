@@ -1,4 +1,5 @@
 <app-post-list
   [posts]="posts"
   (onDeletePost)="deletePost($event)"
+  (onChangePage)="pageChange($event)"
 ></app-post-list>
