@@ -9,13 +9,13 @@ import { Post } from 'src/app/_models/post.model';
 })
 export class PostListComponent implements OnInit {
   @Input() posts!: Post[];
+  @Input() totalPosts!: number;
   @Output() onDeletePost = new EventEmitter<string>();
   @Output() onChangePage = new EventEmitter<{
     postsPerPage: number;
     currentPage: number;
   }>();
-  totalPosts = 10;
-  postsperPage = 3;
+  postsperPage = 5;
   currentPage = 1;
   pageSizeOptions = [1, 2, 5, 10];
 

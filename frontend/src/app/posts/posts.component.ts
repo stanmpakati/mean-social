@@ -11,6 +11,7 @@ import { PostService } from '../_services/post.service';
 })
 export class PostsComponent implements OnInit, OnDestroy {
   posts: Post[] = [];
+  totalPosts!: number;
   postsSub!: Subscription;
 
   constructor(private postService: PostService) {}
@@ -18,9 +19,12 @@ export class PostsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.postService.getPosts(5, 1);
 
-    this.postsSub = this.postService.getPostsListener().subscribe((posts) => {
-      this.posts = posts;
-    });
+    this.postsSub = this.postService
+      .getPostsListener()
+      .subscribe((postData: { posts: Post[]; postCount: number }) => {
+        this.posts = postData.posts;
+        this.totalPosts = postData.postCount;
+      });
   }
 
   ngOnDestroy() {

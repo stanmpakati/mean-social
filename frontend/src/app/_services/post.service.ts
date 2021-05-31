@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Post } from '../_models/post.model';
@@ -9,34 +10,40 @@ import { Post } from '../_models/post.model';
 })
 export class PostService {
   private posts: Post[] = [];
-  private postsUpdated = new Subject<Post[]>();
+  private totalPosts!: number;
+  private postsUpdated = new Subject<{ posts: Post[]; postCount: number }>();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   getPosts(postsPerPage: number, currentPage: number): void {
     const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`;
     this.http
       .get<any>(`http://localhost:5000/api/posts${queryParams}`)
       .pipe(
-        map((postData) =>
-          postData.map(
+        map((postData) => ({
+          posts: postData.posts.map(
             (post: { title: any; content: any; _id: any; imagePath: any }) => ({
               title: post.title,
               content: post.content,
               imagePath: post.imagePath,
               id: post._id,
             })
-          )
-        )
+          ),
+          maxPosts: postData.maxPosts,
+        }))
       )
-      .subscribe((posts) => {
-        console.log(posts);
-        this.posts = posts;
-        this.postsUpdated.next([...this.posts]);
+      .subscribe((postData) => {
+        // console.log(postData);
+        this.posts = postData.posts;
+        this.totalPosts = postData.maxPosts;
+        this.postsUpdated.next({
+          posts: [...this.posts],
+          postCount: postData.maxPosts,
+        });
       });
   }
 
-  getPostsListener(): Observable<Post[]> {
+  getPostsListener(): Observable<{ posts: Post[]; postCount: number }> {
     return this.postsUpdated.asObservable();
   }
 
@@ -59,8 +66,9 @@ export class PostService {
       )
       .subscribe((response) => {
         console.log(response);
-        this.posts.push(response.post);
-        this.postsUpdated.next([...this.posts]);
+        // this.posts.push(response.post);
+        // this.postsUpdated.next({posts: [...this.posts], postCount: response.maxPosts});
+        this.router.navigate(['/']);
       });
   }
 
@@ -88,7 +96,10 @@ export class PostService {
       .subscribe(() => {
         const updatedPosts = this.posts.filter((post) => post.id !== postId);
         this.posts = updatedPosts;
-        this.postsUpdated.next([...this.posts]);
+        this.postsUpdated.next({
+          posts: [...this.posts],
+          postCount: this.totalPosts,
+        });
       });
   }
 }

@@ -47,6 +47,7 @@ export const getPosts = (req, res) => {
   const currentPage = +req.query.page;
 
   const postQuery = Post.find();
+  let fetchedPosts;
 
   if (pageSize && currentPage) {
     postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
@@ -54,7 +55,11 @@ export const getPosts = (req, res) => {
 
   postQuery
     .then((documents) => {
-      res.status(200).json(documents);
+      fetchedPosts = documents;
+      return Post.count();
+    })
+    .then((count) => {
+      res.status(200).json({ posts: fetchedPosts, maxPosts: count });
     })
     .catch((err) => console.log(err));
 };
