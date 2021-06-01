@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 
 import postRoutes from "./routes/posts.js";
+import userRoutes from "./routes/user.js";
 
 export const app = express();
 
@@ -25,3 +26,4 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => res.send("Hello Weirdo"));
 
 app.use("/api/posts", postRoutes);
+app.use("/api/user", userRoutes);
