@@ -1,1 +1,14 @@
-<mat-toolbar color="primary"><a routerLink="/home">MEAN social</a></mat-toolbar>
+<mat-toolbar color="primary">
+  <a routerLink="/home">MEAN social</a>
+  <div class="spacer"></div>
+  <ul>
+    <li>
+      <a mat-button routerLink="/create" routerlinkActive="mat-accent"
+        >New Post</a
+      >
+    </li>
+    <li>
+      <a mat-button routerLink="/login" routerlinkActive="mat-accent">Login</a>
+    </li>
+  </ul>
+</mat-toolbar>
