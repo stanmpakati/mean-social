@@ -1,1 +1,91 @@
-<p>signup works!</p>
+<mat-card>
+  <form [formGroup]="form" (submit)="onSignup()">
+    <!-- username form field -->
+    <mat-form-field appearance="fill">
+      <mat-label>Username</mat-label>
+      <input matInput type="name" formControlName="username" />
+      <mat-error
+        *ngIf="
+          (registerFormControl.username.touched || submitted) &&
+          registerFormControl.username.errors?.required
+        "
+        >Username required</mat-error
+      >
+      <mat-error
+        *ngIf="
+          registerFormControl.username.touched &&
+          registerFormControl.username.errors?.userNameNotAvailable
+        "
+        >Username not available</mat-error
+      >
+    </mat-form-field>
+
+    <!-- email form field -->
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email" />
+      <mat-error
+        *ngIf="
+          (registerFormControl.email.touched || submitted) &&
+          registerFormControl.email.errors?.required
+        "
+      >
+        Email is required
+      </mat-error>
+      <mat-error
+        *ngIf="
+          registerFormControl.email.touched &&
+          registerFormControl.email.errors?.email
+        "
+        >Please enter a valid email address</mat-error
+      >
+    </mat-form-field>
+
+    <!-- password form field -->
+    <mat-form-field appearance="fill">
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        [type]="isPassword ? 'password' : 'text'"
+        formControlName="password"
+      />
+      <mat-error
+        *ngIf="
+          registerFormControl.password.touched &&
+          registerFormControl.password.errors?.invalidPassword
+        "
+      >
+        Password should have minimum 8 characters, at least 1 uppercase letter,
+        1 lowercase letter and 1 number
+      </mat-error>
+    </mat-form-field>
+
+    <!-- password form field -->
+    <mat-form-field appearance="fill">
+      <mat-label>Confirm Password</mat-label>
+      <input
+        matInput
+        [type]="isPassword ? 'password' : 'text'"
+        formControlName="confirmPassword"
+      />
+      <mat-error
+        *ngIf="
+          (registerFormControl.confirmPassword.touched || submitted) &&
+          registerFormControl.confirmPassword.errors?.required
+        "
+      >
+        Confirm Password is required
+      </mat-error>
+      <mat-error
+        *ngIf="
+          registerFormControl.confirmPassword.touched &&
+          registerFormControl.confirmPassword.errors?.passwordMismatch
+        "
+      >
+        Passwords do not match
+      </mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="accent" type="submit">Signup</button>
+  </form>
+</mat-card>
