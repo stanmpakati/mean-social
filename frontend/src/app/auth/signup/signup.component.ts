@@ -59,11 +59,9 @@ export class SignupComponent implements OnInit {
   onSignup() {
     if (this.form.invalid) return;
     if (this.form.valid) {
-      console.log('clicked');
-
       const authData: Auth = {
-        username: this.form.value.username,
-        email: this.form.value.email,
+        username: this.form.value.username.toLowercase(),
+        email: this.form.value.email.toLowercase(),
         password: this.form.value.password,
       };
       console.log(authData);

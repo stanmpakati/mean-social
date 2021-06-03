@@ -5,12 +5,16 @@ import user from "../../models/user.js";
 import User from "../../models/user.js";
 
 export const getUsernames = (req, res) => {
+  // Returns a list of all the usernames
   User.find().then((users) => {
     res.status(200).json({ usernames: users.map((user) => user.username) });
   });
 };
 
 export const getEmail = (req, res) => {
+  // to check if an email is in the db or not
+  // takes in email
+
   User.find({ email: req.body.email.toLower() }).then((email) => {
     if (email.length !== 0) res.status(200).json({ message: "Found" });
     else res.json({ message: "Not found" });
@@ -18,7 +22,13 @@ export const getEmail = (req, res) => {
 };
 
 export const signup = (req, res) => {
+  // For signing up new users
+  // Recieves username, email and password
+
+  // Encrypypts the password
   bcrypt.hash(req.body.password, 10).then((hash) => {
+    // Create a new user with the information provided
+    // and hashed password
     const user = new User({
       username: req.body.username.toLower(),
       email: req.body.email.toLower(),
@@ -33,6 +43,7 @@ export const signup = (req, res) => {
         });
       })
       .catch((err) => {
+        console.log(err);
         res.status(500).json({
           error: err,
         });
@@ -41,6 +52,8 @@ export const signup = (req, res) => {
 };
 
 export const login = (req, res) => {
+  // To login already existing users
+  // Takes in either username or email and password
   user
     .findOne({
       $or: [
@@ -67,7 +80,7 @@ export const login = (req, res) => {
           username: user.name,
           userId: user._id,
         },
-        "long_random_word_for_encryption_9qid&&50*,;(32",
+        "long_random_word_for_encryption_9qid&&50*,d^0;(3a2",
         { expiresIn: "1h" }
       );
 
