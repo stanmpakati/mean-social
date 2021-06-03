@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Auth } from 'src/app/_models/auth.model';
+import { AuthService } from 'src/app/_services/auth.service';
 import { CustomvalidationService } from 'src/app/_services/customvalidation.service';
 
 @Component({
@@ -15,14 +17,18 @@ export class SignupComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private customValidator: CustomvalidationService
+    private customValidator: CustomvalidationService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
     this.form = this.fb.group(
       {
-        name: ['', Validators.required],
-        email: ['', [Validators.required, Validators.email]],
+        email: [
+          '',
+          [Validators.required, Validators.email],
+          this.customValidator.emailValidator.bind(this.customValidator),
+        ],
         username: [
           '',
           [Validators.required],
@@ -51,12 +57,18 @@ export class SignupComponent implements OnInit {
   }
 
   onSignup() {
-    this.submitted = true;
+    if (this.form.invalid) return;
     if (this.form.valid) {
-      alert(
-        'Form Submitted succesfully!!!\n Check the values in browser console.'
-      );
-      console.table(this.form.value);
+      console.log('clicked');
+
+      const authData: Auth = {
+        username: this.form.value.username,
+        email: this.form.value.email,
+        password: this.form.value.password,
+      };
+      console.log(authData);
+
+      this.authService.createUser(authData);
     }
   }
 }

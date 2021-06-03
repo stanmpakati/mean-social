@@ -1,11 +1,17 @@
 import { Injectable } from '@angular/core';
 import { ValidatorFn, AbstractControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { debounce, debounceTime, map, take } from 'rxjs/operators';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CustomvalidationService {
+  UserList: string[] = [];
+
+  constructor(private authService: AuthService) {}
+
   patternValidator(): ValidatorFn | null {
     return (control: AbstractControl): { [key: string]: any } | null => {
       if (!control.value) {
@@ -42,7 +48,21 @@ export class CustomvalidationService {
     };
   }
 
-  userNameValidator(userControl: AbstractControl) {
+  emailValidator = (emailControl: AbstractControl) => {
+    return this.authService.findEmail(emailControl.value).pipe(
+      debounceTime(1000),
+      take(1),
+      map((res) =>
+        res.message === 'Found' ? { emailNotAvailable: true } : null
+      )
+    );
+  };
+
+  userNameValidator = (userControl: AbstractControl) => {
+    this.authService.findUsernames().subscribe((usernamesObj) => {
+      this.UserList = usernamesObj.usernames;
+    });
+
     return new Promise((resolve) => {
       setTimeout(() => {
         if (this.validateUserName(userControl.value)) {
@@ -52,10 +72,9 @@ export class CustomvalidationService {
         }
       }, 1000);
     });
-  }
+  };
 
   validateUserName(userName: string) {
-    const UserList = ['ankit', 'admin', 'user', 'superuser'];
-    return UserList.indexOf(userName) > -1;
+    return this.UserList.indexOf(userName) > -1;
   }
 }
