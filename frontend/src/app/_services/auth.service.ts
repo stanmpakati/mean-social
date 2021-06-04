@@ -7,7 +7,13 @@ import { Auth } from '../_models/auth.model';
   providedIn: 'root',
 })
 export class AuthService {
+  private token!: string;
+
   constructor(private http: HttpClient) {}
+
+  getToken() {
+    return this.token;
+  }
 
   createUser(authDetails: Auth) {
     this.http
@@ -19,9 +25,13 @@ export class AuthService {
 
   loginUser(authDetails: Auth) {
     this.http
-      .post('http://localhost:5000/api/user/login', authDetails)
+      .post<{ token: string; message: string }>(
+        'http://localhost:5000/api/user/login',
+        authDetails
+      )
       .subscribe((response) => {
         console.log(response);
+        this.token = response.token;
       });
   }
 
