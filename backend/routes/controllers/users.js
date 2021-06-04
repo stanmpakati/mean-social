@@ -15,7 +15,7 @@ export const getEmail = (req, res) => {
   // to check if an email is in the db or not
   // takes in email
 
-  User.find({ email: req.body.email.toLower() }).then((email) => {
+  User.find({ email: req.body.email.toLowerCase() }).then((email) => {
     if (email.length !== 0) res.status(200).json({ message: "Found" });
     else res.json({ message: "Not found" });
   });
@@ -30,8 +30,8 @@ export const signup = (req, res) => {
     // Create a new user with the information provided
     // and hashed password
     const user = new User({
-      username: req.body.username.toLower(),
-      email: req.body.email.toLower(),
+      username: req.body.username.toLowerCase(),
+      email: req.body.email.toLowerCase(),
       password: hash,
     });
     user
@@ -57,14 +57,13 @@ export const login = (req, res) => {
   user
     .findOne({
       $or: [
-        { username: req.body.username.toLower() },
-        { email: req.body.email.toLower() },
+        { username: req.body.username.toLowerCase() },
+        { email: req.body.email.toLowerCase() },
       ],
     })
     .then((user) => {
       // if user is not found
       if (!user) return res.status(404).json({ message: "user not found" });
-
       // if user found
       return bcrypt.compare(req.body.password, user.password);
     })

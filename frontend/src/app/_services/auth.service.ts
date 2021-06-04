@@ -17,6 +17,14 @@ export class AuthService {
       });
   }
 
+  loginUser(authDetails: Auth) {
+    this.http
+      .post('http://localhost:5000/api/user/login', authDetails)
+      .subscribe((response) => {
+        console.log(response);
+      });
+  }
+
   findEmail(email: string) {
     return this.http.post<{ message: string }>(
       'http://localhost:5000/api/user/email',
