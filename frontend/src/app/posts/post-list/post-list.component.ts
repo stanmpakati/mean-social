@@ -1,13 +1,22 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
+import { Subscription } from 'rxjs';
 import { Post } from 'src/app/_models/post.model';
+import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
   selector: 'app-post-list',
   templateUrl: './post-list.component.html',
   styleUrls: ['./post-list.component.scss'],
 })
-export class PostListComponent implements OnInit {
+export class PostListComponent implements OnInit, OnDestroy {
   @Input() posts!: Post[];
   @Input() totalPosts!: number;
   @Output() onDeletePost = new EventEmitter<string>();
@@ -18,10 +27,23 @@ export class PostListComponent implements OnInit {
   postsperPage = 5;
   currentPage = 1;
   pageSizeOptions = [1, 2, 5, 10];
+  isAuthenticated!: boolean;
+  isAuthSub!: Subscription;
 
-  constructor() {}
+  constructor(private authService: AuthService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.isAuthSub = this.authService
+      .getAuthStatusListener()
+      .subscribe((isAuthenticated) => {
+        this.isAuthenticated = isAuthenticated;
+      });
+    this.isAuthenticated = this.authService.getIsAuthenticated();
+  }
+
+  ngOnDestroy() {
+    this.isAuthSub.unsubscribe();
+  }
 
   onDelete(postId: string) {
     this.onDeletePost.emit(postId);

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Auth } from '../_models/auth.model';
 
 @Injectable({
@@ -8,11 +8,21 @@ import { Auth } from '../_models/auth.model';
 })
 export class AuthService {
   private token!: string;
+  private isAuthenticated = false;
+  private authStatusListener = new Subject<boolean>();
 
   constructor(private http: HttpClient) {}
 
   getToken() {
     return this.token;
+  }
+
+  getIsAuthenticated() {
+    return this.isAuthenticated;
+  }
+
+  getAuthStatusListener() {
+    return this.authStatusListener.asObservable();
   }
 
   createUser(authDetails: Auth) {
@@ -32,7 +42,18 @@ export class AuthService {
       .subscribe((response) => {
         console.log(response);
         this.token = response.token;
+
+        if (response.token) {
+          this.authStatusListener.next(true);
+          this.isAuthenticated = true;
+        }
       });
+  }
+
+  logout() {
+    this.token = '';
+    this.isAuthenticated = false;
+    this.authStatusListener.next(false);
   }
 
   findEmail(email: string) {
