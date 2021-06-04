@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card *ngIf="!isLoading">
   <form [formGroup]="form" (submit)="onLogin()">
     <!-- email form field -->
     <mat-form-field appearance="fill">
@@ -37,3 +37,4 @@
     <button mat-raised-button color="accent" type="submit">Login</button>
   </form>
 </mat-card>
+<mat-spinner *ngIf="isLoading"></mat-spinner>

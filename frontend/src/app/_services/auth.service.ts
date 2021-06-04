@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { Auth } from '../_models/auth.model';
 
@@ -11,7 +12,7 @@ export class AuthService {
   private isAuthenticated = false;
   private authStatusListener = new Subject<boolean>();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   getToken() {
     return this.token;
@@ -30,6 +31,7 @@ export class AuthService {
       .post('http://localhost:5000/api/user/signup', authDetails)
       .subscribe((response) => {
         console.log(response);
+        this.router.navigateByUrl('/login');
       });
   }
 
@@ -48,12 +50,14 @@ export class AuthService {
           this.isAuthenticated = true;
         }
       });
+    this.router.navigateByUrl('/');
   }
 
   logout() {
     this.token = '';
     this.isAuthenticated = false;
     this.authStatusListener.next(false);
+    this.router.navigateByUrl('/');
   }
 
   findEmail(email: string) {

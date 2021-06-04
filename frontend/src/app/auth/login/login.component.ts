@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit {
   onLogin() {
     if (this.form.invalid) return;
     this.submitted = true;
+    this.isLoading = true;
 
     const auth: Auth = {
       email: this.form.value.email,
@@ -42,5 +43,6 @@ export class LoginComponent implements OnInit {
 
     this.authService.loginUser(auth);
     this.form.reset();
+    this.isLoading = false;
   }
 }
