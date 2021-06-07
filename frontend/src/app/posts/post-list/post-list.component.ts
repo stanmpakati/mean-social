@@ -29,16 +29,19 @@ export class PostListComponent implements OnInit, OnDestroy {
   pageSizeOptions = [1, 2, 5, 10];
   isAuthenticated!: boolean;
   isAuthSub!: Subscription;
+  userId!: string;
 
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
+    this.userId = this.authService.getUserId();
+    this.isAuthenticated = this.authService.getIsAuthenticated();
     this.isAuthSub = this.authService
       .getAuthStatusListener()
       .subscribe((isAuthenticated) => {
         this.isAuthenticated = isAuthenticated;
+        this.userId = this.authService.getUserId();
       });
-    this.isAuthenticated = this.authService.getIsAuthenticated();
   }
 
   ngOnDestroy() {

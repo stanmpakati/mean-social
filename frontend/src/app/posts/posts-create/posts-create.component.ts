@@ -69,6 +69,7 @@ export class PostsCreateComponent implements OnInit {
       title: this.form.value.title,
       content: this.form.value.content,
       imagePath: '',
+      creator: '',
     };
 
     if (this.mode === 'create') {

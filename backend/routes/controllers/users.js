@@ -91,6 +91,7 @@ export const login = (req, res) => {
         message: "logged in successefuly",
         token: token,
         expiresIn: 3600,
+        userId: loggedInUser._id,
       });
     })
     .catch((err) => {
