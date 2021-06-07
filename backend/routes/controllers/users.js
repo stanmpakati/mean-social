@@ -84,7 +84,13 @@ export const login = (req, res) => {
       );
 
       // Send response
-      res.status(200).json({ message: "logged in successefuly", token: token });
+      res
+        .status(200)
+        .json({
+          message: "logged in successefuly",
+          token: token,
+          expiresIn: 3600,
+        });
     })
     .catch((err) => {
       console.log(err), res.status(500).json({ message: err });
