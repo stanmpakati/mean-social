@@ -12,7 +12,17 @@ export default (req, res, next) => {
     if (token === undefined)
       return res.status(401).send({ message: "No Token" });
 
-    jwt.verify(token, "long_random_word_for_encryption_9qid&&50*,d^0;(3a2");
+    const decodedToken = jwt.verify(
+      token,
+      "long_random_word_for_encryption_9qid&&50*,d^0;(3a2"
+    );
+    req.userData = {
+      email: decodedToken.email,
+      userId: decodedToken.userId,
+      username: decodedToken.username,
+    };
+    console.log("next");
+    console.log(decodedToken);
     next();
   } catch (err) {
     console.log(err);

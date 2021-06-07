@@ -54,6 +54,8 @@ export const signup = (req, res) => {
 export const login = (req, res) => {
   // To login already existing users
   // Takes in either username or email and password
+  let loggedInUser = new User();
+
   user
     .findOne({
       $or: [
@@ -65,6 +67,7 @@ export const login = (req, res) => {
       // if user is not found
       if (!user) return res.status(404).json({ message: "user not found" });
       // if user found
+      loggedInUser = user;
       return bcrypt.compare(req.body.password, user.password);
     })
     .then((result) => {
@@ -75,22 +78,20 @@ export const login = (req, res) => {
       // Create jwt token
       const token = jwt.sign(
         {
-          email: user.email,
-          username: user.name,
-          userId: user._id,
+          email: loggedInUser.email,
+          username: loggedInUser.name,
+          userId: loggedInUser._id,
         },
         "long_random_word_for_encryption_9qid&&50*,d^0;(3a2",
         { expiresIn: "1h" }
       );
 
       // Send response
-      res
-        .status(200)
-        .json({
-          message: "logged in successefuly",
-          token: token,
-          expiresIn: 3600,
-        });
+      res.status(200).json({
+        message: "logged in successefuly",
+        token: token,
+        expiresIn: 3600,
+      });
     })
     .catch((err) => {
       console.log(err), res.status(500).json({ message: err });

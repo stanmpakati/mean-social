@@ -26,8 +26,9 @@ export const addPost = (req, res) => {
   const post = new Post({
     ...req.body,
     imagePath: `${url}/images/${req.file.filename}`,
+    creator: req.userData.userId,
   });
-
+  console.log(`user data: ${req.userData}`);
   post
     .save()
     .then((createdPost) => {
